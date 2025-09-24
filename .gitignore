@@ -1,0 +1,50 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+pacer-service/pacer-service
+
+# Go
+vendor/
+*.test
+*.out
+go.sum
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+.venv
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Docker
+.dockerignore
+*.log
+
+# Environment
+.env
+.env.local
+
+# Database
+*.sqlite
+*.db
+data/
+
+# Dependencies
+node_modules/
+dist/
+build/

@@ -1,0 +1,84 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: budget-pacer-redis
+    ports:
+      - "6380:6379"
+    networks:
+      - pacer-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  postgres:
+    image: postgres:14-alpine
+    container_name: budget-pacer-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: budget_pacer
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - pacer-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pacer-service:
+    build: ./pacer-service
+    container_name: budget-pacer-core
+    environment:
+      REDIS_ADDR: redis:6379
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/budget_pacer?sslmode=disable
+    ports:
+      - "8080:8080"
+    networks:
+      - pacer-network
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  api:
+    build: ./api
+    container_name: budget-pacer-api
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/budget_pacer
+      REDIS_URL: redis://redis:6379
+      PACER_SERVICE_URL: http://pacer-service:8080
+    ports:
+      - "8000:8000"
+    networks:
+      - pacer-network
+    depends_on:
+      pacer-service:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: budget-pacer-nginx
+    volumes:
+      - ./dashboard:/usr/share/nginx/html
+    ports:
+      - "8081:80"
+    networks:
+      - pacer-network
+    restart: unless-stopped
+
+networks:
+  pacer-network:
+    driver: bridge
