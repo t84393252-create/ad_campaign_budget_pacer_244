@@ -18,7 +18,6 @@ The Ad Campaign Budget Pacer prevents budget overspending while maximizing ad de
 
 - **[💡 Understanding the Problem](#-understanding-the-problem)**
 - **[🎯 How It Works](#-how-it-works---high-level)**
-- **[🏗️ Architecture](#️-architecture)**
 - **[🚦 Quick Start](#-quick-start)**
 - **[⚡ Performance & Speed](#-why-speed-matters)**
 - **[🛡️ Circuit Breaker Pattern](#️-circuit-breaker-pattern)**
@@ -165,29 +164,6 @@ Midnight: Day Ends
 
 [↑ Back to Top](#-ad-campaign-budget-pacer)
 
-## 🏗️ Architecture
-
-```
-┌─────────────────┐     ┌──────────────┐     ┌─────────────┐
-│   Dashboard     │────▶│  Nginx       │────▶│  FastAPI    │
-│   (HTML/JS)     │     │  (Reverse    │     │  (Python)   │
-└─────────────────┘     │   Proxy)     │     └──────┬──────┘
-                        └──────┬───────┘              │
-                               │                      │
-                        ┌──────▼──────────────────────▼─────┐
-                        │   Pacer Service (Go)              │
-                        │   - Pacing Algorithms             │
-                        │   - Circuit Breakers              │
-                        │   - Budget Tracking               │
-                        └────────┬──────────────┬───────────┘
-                                 │              │
-                        ┌────────▼────┐  ┌─────▼──────┐
-                        │   Redis     │  │ PostgreSQL  │
-                        │  (Counters) │  │ (Storage)   │
-                        └─────────────┘  └────────────┘
-```
-
-[↑ Back to Top](#-ad-campaign-budget-pacer)
 
 ## 🚦 Quick Start
 
