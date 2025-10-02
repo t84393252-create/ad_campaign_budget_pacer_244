@@ -2,6 +2,60 @@
 
 A production-ready, high-performance ad campaign budget pacing system that intelligently distributes campaign budgets throughout the day with real-time tracking, predictive pacing algorithms, and circuit breakers. 💰⚡🎯
 
+## 📑 Table of Contents
+
+- [🎯 Overview](#-overview)
+- [💡 Understanding the Problem](#-understanding-the-problem)
+  - [💵 What Are Ad Bids?](#-what-are-ad-bids)
+  - [💸 The Budget Challenge](#-the-budget-challenge)
+- [🎯 How It Works](#-how-it-works---high-level)
+  - [⚡ Decision Flow](#-the-decision-flow-under-10ms)
+  - [🌃 Real Example](#-real-example-friday-night-campaign)
+- [🏗️ Architecture](#️-architecture)
+- [🚦 Quick Start](#-quick-start)
+  - [Prerequisites](#-prerequisites)
+  - [Installation Steps](#️⃣-clone-and-start-services)
+- [⚡ Performance & Speed](#-why-speed-matters)
+- [🛡️ Circuit Breaker Pattern](#️-circuit-breaker-pattern)
+- [📊 Pacing Algorithms](#-pacing-algorithms)
+  - [⚖️ EVEN](#️-even-pacing)
+  - [🏃 ASAP](#-asap-pacing)
+  - [🌅 FRONT_LOADED](#-front_loaded-pacing)
+  - [🤖 ADAPTIVE](#-adaptive-pacing)
+- [📢 Understanding Campaigns](#-understanding-campaigns)
+- [🔥 Redis Failure Handling](#-redis-failure-handling--graceful-degradation)
+  - [🔄 Failover Strategy](#-multi-level-fallback-strategy)
+  - [⚙️ How Failover Works](#️-how-failover-works)
+  - [🧪 Testing Failover](#-testing-redis-failover)
+- [🔄 Complete System Flow](#-complete-system-flow)
+- [💡 Key Benefits](#-key-benefits)
+- [🔧 API Endpoints](#-api-endpoints)
+  - [⚙️ Core Service](#️-core-pacing-service-port-8080)
+  - [🎮 Management API](#-management-api-port-8000)
+- [📈 Performance Benchmarks](#-performance-benchmarks)
+- [✅ System Validation](#-system-validation)
+  - [🌡️ Quick Health Check](#️-quick-health-check)
+  - [🧪 Validation Suite](#-comprehensive-validation-suite)
+  - [🔧 Manual Testing](#-manual-validation-scenarios)
+  - [👀 Monitoring](#-continuous-monitoring)
+- [🧪 Load Testing](#-load-testing)
+- [🔍 Monitoring](#-monitoring)
+  - [📊 Grafana](#-grafana-dashboard)
+  - [🎯 Metrics](#-key-metrics)
+- [🐳 Docker Commands](#-docker-commands)
+- [🏗️ Development](#️-development)
+  - [💻 Local Setup](#-local-development-setup)
+  - [🧪 Testing](#-running-tests)
+- [📝 Configuration](#-configuration)
+  - [🌍 Environment Variables](#-environment-variables)
+  - [⚙️ Pacing Config](#️-pacing-configuration)
+- [🚀 Production Deployment](#-production-deployment)
+  - [☸️ Kubernetes](#️-kubernetes-deployment)
+  - [🏛️ High Availability](#️-high-availability-setup)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [🙏 Acknowledgments](#-acknowledgments)
+
 ## 🎯 Overview
 
 The Ad Campaign Budget Pacer prevents budget overspending while maximizing ad delivery through:
@@ -38,6 +92,8 @@ Potential disaster: Spend $75,000 in 1 hour! 💸
 ```
 
 Our pacer prevents this by intelligently controlling spend rate throughout the day. 🎯💰
+
+[↑ Back to Top](#-ad-campaign-budget-pacer)
 
 ## 🎯 How It Works - High Level
 
@@ -83,6 +139,8 @@ Midnight: Day Ends
 └── Reach: 2.5M impressions
 ```
 
+[↑ Back to Top](#-ad-campaign-budget-pacer)
+
 ## 🏗️ Architecture
 
 ```
@@ -104,6 +162,8 @@ Midnight: Day Ends
                         │  (Counters) │  │ (Storage)   │
                         └─────────────┘  └────────────┘
 ```
+
+[↑ Back to Top](#-ad-campaign-budget-pacer)
 
 ## 🚦 Quick Start
 
@@ -168,6 +228,8 @@ curl -X POST http://localhost:8080/pacing/decision \
 }
 ```
 
+[↑ Back to Top](#-ad-campaign-budget-pacer)
+
 ## ⚡ Why Speed Matters
 
 The entire ad auction happens in 100ms:
@@ -188,6 +250,8 @@ If you take 50ms: TIMEOUT = Lost opportunity = No ad shown
 - 10,000 requests/second
 - 20ms extra per request = 200 hours of delay/day!
 - Result: System collapse
+
+[↑ Back to Top](#-ad-campaign-budget-pacer)
 
 ## 🛡️ Circuit Breaker Pattern
 
@@ -228,6 +292,8 @@ With Circuit Breaker:
 Final: $9,500 (Within budget ✅)
 ```
 
+[↑ Back to Top](#-ad-campaign-budget-pacer)
+
 ## 📊 Pacing Algorithms
 
 ### ⚖️ EVEN Pacing
@@ -261,6 +327,8 @@ Uses hourly multipliers based on:
 - Day of week patterns
 - Traffic predictions
 ```
+
+[↑ Back to Top](#-ad-campaign-budget-pacer)
 
 ## 📢 Understanding Campaigns
 
@@ -308,6 +376,8 @@ Target: Inactive Lyft users
 Strategy: ADAPTIVE (learned patterns)
 Goal: Reactivation
 ```
+
+[↑ Back to Top](#-ad-campaign-budget-pacer)
 
 ## 🛡️ Circuit Breaker States
 
@@ -457,6 +527,8 @@ When Redis returns:
 - Automatic recovery in seconds
 - No manual intervention
 
+[↑ Back to Top](#-ad-campaign-budget-pacer)
+
 ## 🔄 Complete System Flow
 
 🔍 Let's trace a bid request through the entire system:
@@ -501,6 +573,8 @@ When Redis returns:
    - Metrics: Prometheus counter++
 ```
 
+[↑ Back to Top](#-ad-campaign-budget-pacer)
+
 ## 💡 Key Benefits
 
 ### 💼 For the Business
@@ -530,6 +604,8 @@ When Redis returns:
 - 🔒 Protected budgets
 - 🎯 Optimized delivery
 - 😌 Peace of mind
+
+[↑ Back to Top](#-ad-campaign-budget-pacer)
 ```
 
 ## 🔧 API Endpoints
@@ -556,6 +632,8 @@ When Redis returns:
 | `/alerts/{id}` | GET | Get alerts |
 | `/ws/budget-updates` | WS | Real-time updates |
 
+[↑ Back to Top](#-ad-campaign-budget-pacer)
+
 ## 📈 Performance Benchmarks
 
 💻 Tested on MacBook Pro M1 (16GB RAM):
@@ -579,6 +657,8 @@ Accuracy:
 - Pacing accuracy: 96.5%
 - Circuit breaker reliability: 99.9%
 ```
+
+[↑ Back to Top](#-ad-campaign-budget-pacer)
 
 ## ✅ System Validation
 
@@ -637,6 +717,8 @@ python scripts/validate-system.py
 | **Concurrency** | Thread safety | No lost updates |
 | **Recovery** | Self-healing | Auto-recovery after failures |
 | **Persistence** | Data consistency | Same data across services |
+
+[↑ Back to Top](#-ad-campaign-budget-pacer)
 
 ### 🔧 Manual Validation Scenarios
 
@@ -818,6 +900,8 @@ docker-compose down
 docker-compose down -v
 ```
 
+[↑ Back to Top](#-ad-campaign-budget-pacer)
+
 ## 🏗️ Development
 
 ### 💻 Local Development Setup
@@ -853,6 +937,8 @@ pytest -v
 docker-compose up -d
 python scripts/integration-test.py
 ```
+
+[↑ Back to Top](#-ad-campaign-budget-pacer)
 
 ## 📝 Configuration
 
@@ -927,6 +1013,8 @@ spec:
 3. 📝 Commit changes (`git commit -m 'Add amazing feature'`)
 4. 🚀 Push branch (`git push origin feature/amazing`)
 5. 🎉 Open Pull Request
+
+[↑ Back to Top](#-ad-campaign-budget-pacer)
 
 ## 📄 License
 
