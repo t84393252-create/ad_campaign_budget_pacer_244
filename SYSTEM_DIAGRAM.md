@@ -74,11 +74,15 @@ graph TB
     PACER -->|Load Campaigns| PG
     PACER -->|Store History| PG
 
-    style RTB fill:#ff9999
-    style PACER fill:#99ff99
-    style CB fill:#ffcc99
-    style REDIS fill:#99ccff
-    style PG fill:#cc99ff
+    style RTB fill:#ff9999,color:#000
+    style PACER fill:#99ff99,color:#000
+    style CB fill:#ffcc99,color:#000
+    style REDIS fill:#99ccff,color:#000
+    style PG fill:#cc99ff,color:#000
+    style NGINX fill:#f9f9f9,color:#000
+    style FASTAPI fill:#f0f0f0,color:#000
+    style DASH fill:#f5f5f5,color:#000
+    style MEMORY fill:#ffffcc,color:#000
 ```
 
 ## 🔄 Request Flow Sequences
