@@ -2,60 +2,6 @@
 
 A production-ready, high-performance ad campaign budget pacing system that intelligently distributes campaign budgets throughout the day with real-time tracking, predictive pacing algorithms, and circuit breakers. 💰⚡🎯
 
-## 📑 Table of Contents
-
-- [🎯 Overview](#-overview)
-- [💡 Understanding the Problem](#-understanding-the-problem)
-  - [💵 What Are Ad Bids?](#-what-are-ad-bids)
-  - [💸 The Budget Challenge](#-the-budget-challenge)
-- [🎯 How It Works](#-how-it-works---high-level)
-  - [⚡ Decision Flow](#-the-decision-flow-under-10ms)
-  - [🌃 Real Example](#-real-example-friday-night-campaign)
-- [🏗️ Architecture](#️-architecture)
-- [🚦 Quick Start](#-quick-start)
-  - [Prerequisites](#-prerequisites)
-  - [Installation Steps](#️⃣-clone-and-start-services)
-- [⚡ Performance & Speed](#-why-speed-matters)
-- [🛡️ Circuit Breaker Pattern](#️-circuit-breaker-pattern)
-- [📊 Pacing Algorithms](#-pacing-algorithms)
-  - [⚖️ EVEN](#️-even-pacing)
-  - [🏃 ASAP](#-asap-pacing)
-  - [🌅 FRONT_LOADED](#-front_loaded-pacing)
-  - [🤖 ADAPTIVE](#-adaptive-pacing)
-- [📢 Understanding Campaigns](#-understanding-campaigns)
-- [🔥 Redis Failure Handling](#-redis-failure-handling--graceful-degradation)
-  - [🔄 Failover Strategy](#-multi-level-fallback-strategy)
-  - [⚙️ How Failover Works](#️-how-failover-works)
-  - [🧪 Testing Failover](#-testing-redis-failover)
-- [🔄 Complete System Flow](#-complete-system-flow)
-- [💡 Key Benefits](#-key-benefits)
-- [🔧 API Endpoints](#-api-endpoints)
-  - [⚙️ Core Service](#️-core-pacing-service-port-8080)
-  - [🎮 Management API](#-management-api-port-8000)
-- [📈 Performance Benchmarks](#-performance-benchmarks)
-- [✅ System Validation](#-system-validation)
-  - [🌡️ Quick Health Check](#️-quick-health-check)
-  - [🧪 Validation Suite](#-comprehensive-validation-suite)
-  - [🔧 Manual Testing](#-manual-validation-scenarios)
-  - [👀 Monitoring](#-continuous-monitoring)
-- [🧪 Load Testing](#-load-testing)
-- [🔍 Monitoring](#-monitoring)
-  - [📊 Grafana](#-grafana-dashboard)
-  - [🎯 Metrics](#-key-metrics)
-- [🐳 Docker Commands](#-docker-commands)
-- [🏗️ Development](#️-development)
-  - [💻 Local Setup](#-local-development-setup)
-  - [🧪 Testing](#-running-tests)
-- [📝 Configuration](#-configuration)
-  - [🌍 Environment Variables](#-environment-variables)
-  - [⚙️ Pacing Config](#️-pacing-configuration)
-- [🚀 Production Deployment](#-production-deployment)
-  - [☸️ Kubernetes](#️-kubernetes-deployment)
-  - [🏛️ High Availability](#️-high-availability-setup)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [🙏 Acknowledgments](#-acknowledgments)
-
 ## 🎯 Overview
 
 The Ad Campaign Budget Pacer prevents budget overspending while maximizing ad delivery through:
@@ -64,6 +10,84 @@ The Ad Campaign Budget Pacer prevents budget overspending while maximizing ad de
 - 🚨 **Circuit breaker protection** to prevent overspend
 - ⚡ **10,000+ QPS** throughput capability
 - 📈 **Real-time monitoring dashboard** with WebSocket updates
+
+<details>
+<summary><b>📑 Table of Contents</b> <i>(click to expand)</i></summary>
+
+<br>
+
+- **[💡 Understanding the Problem](#-understanding-the-problem)**
+- **[🎯 How It Works](#-how-it-works---high-level)**
+- **[🏗️ Architecture](#️-architecture)**
+- **[🚦 Quick Start](#-quick-start)**
+- **[⚡ Performance & Speed](#-why-speed-matters)**
+- **[🛡️ Circuit Breaker Pattern](#️-circuit-breaker-pattern)**
+- **[📊 Pacing Algorithms](#-pacing-algorithms)**
+- **[📢 Understanding Campaigns](#-understanding-campaigns)**
+- **[🔥 Redis Failure Handling](#-redis-failure-handling--graceful-degradation)**
+- **[🔄 Complete System Flow](#-complete-system-flow)**
+- **[💡 Key Benefits](#-key-benefits)**
+- **[🔧 API Endpoints](#-api-endpoints)**
+- **[📈 Performance Benchmarks](#-performance-benchmarks)**
+- **[✅ System Validation](#-system-validation)**
+- **[🧪 Load Testing](#-load-testing)**
+- **[🔍 Monitoring](#-monitoring)**
+- **[🐳 Docker Commands](#-docker-commands)**
+- **[🏗️ Development](#️-development)**
+- **[📝 Configuration](#-configuration)**
+- **[🚀 Production Deployment](#-production-deployment)**
+- **[🤝 Contributing](#-contributing)**
+- **[📄 License](#-license)**
+- **[🙏 Acknowledgments](#-acknowledgments)**
+
+<details>
+<summary><i>View all subsections</i></summary>
+
+- [💡 Understanding the Problem](#-understanding-the-problem)
+  - [💵 What Are Ad Bids?](#-what-are-ad-bids)
+  - [💸 The Budget Challenge](#-the-budget-challenge)
+- [🎯 How It Works](#-how-it-works---high-level)
+  - [⚡ Decision Flow](#-the-decision-flow-under-10ms)
+  - [🌃 Real Example](#-real-example-friday-night-campaign)
+- [🚦 Quick Start](#-quick-start)
+  - [✅ Prerequisites](#-prerequisites)
+  - [1️⃣ Clone and Start](#️⃣-clone-and-start-services)
+  - [2️⃣ Access Services](#️⃣-access-services)
+  - [3️⃣ Create Campaign](#️⃣-create-your-first-campaign)
+  - [4️⃣ Make Bid Decision](#️⃣-make-a-bid-decision)
+- [📊 Pacing Algorithms](#-pacing-algorithms)
+  - [⚖️ EVEN](#️-even-pacing)
+  - [🏃 ASAP](#-asap-pacing)
+  - [🌅 FRONT_LOADED](#-front_loaded-pacing)
+  - [🤖 ADAPTIVE](#-adaptive-pacing)
+- [🔥 Redis Failure Handling](#-redis-failure-handling--graceful-degradation)
+  - [🔄 Failover Strategy](#-multi-level-fallback-strategy)
+  - [⚙️ How Failover Works](#️-how-failover-works)
+  - [🧪 Testing Failover](#-testing-redis-failover)
+- [🔧 API Endpoints](#-api-endpoints)
+  - [⚙️ Core Service](#️-core-pacing-service-port-8080)
+  - [🎮 Management API](#-management-api-port-8000)
+- [✅ System Validation](#-system-validation)
+  - [🌡️ Quick Health Check](#️-quick-health-check)
+  - [🧪 Validation Suite](#-comprehensive-validation-suite)
+  - [🔧 Manual Testing](#-manual-validation-scenarios)
+  - [👀 Continuous Monitoring](#-continuous-monitoring)
+- [🔍 Monitoring](#-monitoring)
+  - [📊 Grafana Dashboard](#-grafana-dashboard)
+  - [🎯 Key Metrics](#-key-metrics)
+- [🏗️ Development](#️-development)
+  - [💻 Local Setup](#-local-development-setup)
+  - [🧪 Running Tests](#-running-tests)
+- [📝 Configuration](#-configuration)
+  - [🌍 Environment Variables](#-environment-variables)
+  - [⚙️ Pacing Config](#️-pacing-configuration)
+- [🚀 Production Deployment](#-production-deployment)
+  - [☸️ Kubernetes](#️-kubernetes-deployment)
+  - [🏛️ High Availability](#️-high-availability-setup)
+
+</details>
+
+</details>
 
 ## 💡 Understanding the Problem
 
